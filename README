@@ -1,0 +1,46 @@
+parallelSorts
+=============
+
+Comparison of parallel sort algorithms (bucket sort, merge sort, odd-even sort) implemented with MPI.
+
+#######################################################
+# Check that it works (for 5 processors and 17 data)
+#######################################################
+NB: the line "CFLAGS+=-DSAVE_DATA" must be uncommented in the Makefile.
+(This is the case by default)
+
+Compile:
+    if you have already compiled once without -DSAVE_DATA:
+        make clean 
+    make
+
+Run: (17 data on 5 processors)
+    mpirun -np 5 ./merge_sort 17
+    mpirun -np 5 ./odd_even_sort 17
+    mpirun -np 5 ./bucket_sort 17
+
+This will produce files with the unsorted data and the sorted data.
+To check that these results are correct, run:
+
+./check_result.py merge_sort_data_P5_N17.txt    merge_sort_result_P5_N17.txt 
+./check_result.py odd_even_sort_data_P5_N17.txt odd_even_sort_result_P5_N17.txt 
+./check_result.py bucket_sort_data_P5_N17.txt   bucket_sort_result_P5_N17.txt 
+
+This should output "OK"
+
+###################################
+# Plot speedups (for 10000000 data)
+###################################
+WARNING: If you want to run the program with a lot of data (like 10000000),
+    comment the line "CFLAGS+=-DSAVE_DATA" in the Makefile and do a make clean
+--> Otherwise the program will try to create really big data/result files.
+
+Compile: 
+    make
+Run:
+    ./run.bash 10000000
+
+Plot the results:
+    On a machine with python and matplotlib installed:
+    In the Project directory, launch ./plot_speedup.py 10000000
+    This should create 3 png files containing graph of the speedup
